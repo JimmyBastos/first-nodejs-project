@@ -17,7 +17,7 @@ class CreateTransactionService {
   public execute({ title, type, value }: Request): Transaction {
 
     let balance = this.transactionsRepository.getBalance()
-    console.log(balance)
+
     if (type === 'outcome' && value > balance.total) {
       throw new Error('Outcome value is greater than the balance')
     }
