@@ -1,6 +1,12 @@
 import TransactionsRepository from '../repositories/TransactionsRepository';
 import Transaction from '../models/Transaction';
 
+interface Request {
+  type: 'income' | 'outcome',
+  title: string,
+  value: number
+}
+
 class CreateTransactionService {
   private transactionsRepository: TransactionsRepository;
 
@@ -8,8 +14,19 @@ class CreateTransactionService {
     this.transactionsRepository = transactionsRepository;
   }
 
-  public execute(): Transaction {
-    // TODO
+  public execute({ title, type, value }: Request): Transaction {
+
+    let balance = this.transactionsRepository.getBalance()
+    console.log(balance)
+    if (type === 'outcome' && value > balance.total) {
+      throw new Error('Outcome value is greater than the balance')
+    }
+
+    const transaction = this.transactionsRepository.create(
+      { title, type, value }
+    )
+
+    return transaction
   }
 }
 
